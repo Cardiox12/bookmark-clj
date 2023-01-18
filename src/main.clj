@@ -32,6 +32,5 @@
   (if-let [parsed-opts (validate-args args)]
     (let [{options :options} parsed-opts
           {:keys [begin end duration]} options]
-      (println parsed-opts)
       (println (bookmark/bookmark begin end duration)))
     (error-missing-args)))
