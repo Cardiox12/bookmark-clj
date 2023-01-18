@@ -32,5 +32,7 @@
   (if-let [parsed-opts (validate-args args)]
     (let [{options :options} parsed-opts
           {:keys [begin end duration]} options]
-      (println (bookmark/bookmark begin end duration)))
+      (-> (bookmark/bookmark begin end duration)
+          bookmark/pretty-print-bookmarks
+          print))
     (error-missing-args)))

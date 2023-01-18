@@ -32,15 +32,27 @@
   (let [fmt (format "%%%ds %%d" *format-padding*)]
     (format fmt desc goal)))
 
+(defn- -enumerate
+  ([coll begin]
+   (zipmap (iterate inc begin) coll))
+  ([coll]
+   (-enumerate coll 0)))
+
 (defn- -format-bookmarks-list
-  [bookmarks])
+  [bookmarks]
+  (as-> bookmarks coll
+    (-enumerate coll 1)
+    (map (fn [[index bookmark]]
+           (format "\t%s. %s\n" (str index) (str bookmark)))
+         coll)
+    (reduce str coll)))
 
 (defn pretty-print-bookmarks
   [{:keys [bookmarks pages-per-day total-pages]}]
   (format "%s\n%s\n%s"
           (-format-goal "Daily goal: " pages-per-day)
           (-format-goal "Total pages: " total-pages)
-          "TO REPLACE"))
+          (format "Bookmarks :\n%s" (-format-bookmarks-list bookmarks))))
 
 (defn bookmark
   "Returns a map with statistics about bookmarking a book specific duration"
